@@ -14,7 +14,8 @@ public class Solution {
          while ( ( line = reader.readLine() ) != null ) {
             System.out.println( "TEST CASE ->" + line + "<-" );
             Game game = new Game( line );
-            game.getFinalScore();
+            System.out.println( "FINAL SCORE: " + game.getFinalScore() );
+            System.out.println();
          }
 
          reader.close();
