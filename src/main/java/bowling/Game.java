@@ -30,7 +30,9 @@ public class Game {
       int score = 0;
 
       if ( tenthFrame.equals( STRIKE ) ) {
-         score = score + 10;
+
+         score = 10;
+
          String extraThrows = frames.get( 10 );
          for ( String extraThrow : extraThrows.split( "" ) ) {
             if ( extraThrow.equals( STRIKE ) ) {
@@ -111,13 +113,23 @@ public class Game {
       return score;
    }
 
+   /**
+    * The string the represents the game.
+    */
    private String game;
 
+   /**
+    * getFrames() breaks a hyphen delimited string up into a List for
+    * processing.
+    */
    private List<String> getFrames() {
       List<String> frames = Arrays.asList( this.game.split( "-" ) );
       return frames;
    }
 
+   /**
+    * Constructor that sets the state for the instance.
+    */
    public Game( String game ) {
       this.game = game;
    }
