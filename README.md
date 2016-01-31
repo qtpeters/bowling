@@ -1,3 +1,4 @@
+![Bowling](https://github.com/qtpeters/bowling/blob/master/docs/bowling.jpg)
 
 # This is a score tallier for American 10 pin bowling.
 
