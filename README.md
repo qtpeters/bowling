@@ -1,7 +1,5 @@
 
-<div style="text-align: center">
-   <img align="center" src="https://github.com/qtpeters/bowling/blob/master/docs/bowling.jpg" alt="bowling" />
-</div>
+<img align="middle" src="https://github.com/qtpeters/bowling/blob/master/docs/bowling.jpg" alt="bowling" />
 
 # This is a score tallier for American 10 pin bowling.
 
