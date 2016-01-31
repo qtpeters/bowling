@@ -9,88 +9,22 @@ public class Game {
    private static final String STRIKE = "X";
    private static final String SPARE = "/";
 
-   private String game;
-
-   private List<String> getFrames() {
-      List<String> frames = Arrays.asList( this.game.split( "-" ) );
-      return frames;
-   }
-
-   private int getNextFrameTotal( String frame, String framep1 ) {
-      
-      int total = 0;
-
+   /**
+    * @param frame is the frame in which we want the first throw
+    * @return the value of the first throw of the frame.
+    */
+   static int getFirstThrow( String frame ) {
       String [] throwz = frame.split( "" );
-      if ( throwz[1].equals( SPARE ) ) {
-         String [] throwzp1 = framep1.split( "" );
-         total = Integer.valueOf( throwz[0] ) + 10;
-      } else {
-         total = Integer.valueOf( throwz[0] ) + Integer.valueOf( throwz[1] );
-      }
-
-      return total;
-   }
-
-   private int getFirstThrow( String framep2 ) {
-      String [] throwz = framep2.split( "" );
       return Integer.valueOf( throwz[0] ); 
    }
 
-   private int getFrameTotal( String frame, String framep1, String framep2 ) {
-
-      int total = 0;
-
-      if ( frame.equals( STRIKE ) ) {
-         if ( framep1.equals( STRIKE ) ) {
-            if ( framep2.equals( STRIKE ) ) {
-               total = 10 + 10 + 10;
-            } else {
-               total = 10 + 10 + getFirstThrow( framep2 );
-            }
-         } else {
-            total = 10 + getNextFrameTotal( frame, framep1 );
-         }
-      } else {
-         total = getNextFrameTotal( frame, framep1 );
-      }
-
-      return total;
-   }
-
-   static int doTenthFrameStrike( String extraThrows ) {
-     
-      int score = 0;
-
-      for ( String extraThrow : extraThrows.split( "" ) ) {
-         if ( extraThrow.equals( STRIKE ) ) {
-            score = score + 10;
-         } else {
-            score = score + Integer.valueOf( extraThrow );
-         }
-      }
-
-      return score * 2 + 10;
-   }
-
-   static int doTenthFrameNoStrike( String tenthFrame, List<String> frames  ) {
-      
-      int score = 0;
-
-      String [] throwz = tenthFrame.split( "" );
-      if ( throwz[1].equals( SPARE ) ) {
-         String extraThrow = frames.get( 10 );
-         if ( extraThrow.equals( STRIKE ) ) {
-            score = score + 10;
-         } else {
-            score = score + Integer.valueOf( extraThrow );
-         }
-      } else {
-         score = score + Integer.valueOf( throwz[0] ) + Integer.valueOf( throwz[1] );
-      }
-
-      return score;
-   }
-
+   /**
+    * @param tenthFrame is the tenth frame of the game.
+    * @param frames are the game frames. We will need these if the player
+    *        gets a spare or a strike in the frame.
+    * @return the score from the tenth frame. The tenth frame is different 
+    *         as outlined by the game rules, so we need a new method to manage the case.
+    */
    static int calculateTenthFrame( String tenthFrame, List<String> frames ) {
 
       int score = 0;
@@ -123,22 +57,34 @@ public class Game {
       return score;
    }
 
-   static int calculateNinthFrame( String ninthFrame, String tenthFrame, List<String> frames ) {
+   /**
+    * @param ninthFrame is the ninth frame of the game.
+    * @param tenthFrame is the tenth frame of the game. We will need this one if there 
+    *        is a spare or strike in the ninth frame.
+    * @param frames is all the frames of the game.. We will need this if there is a strike
+    *        in the ninth and tenth frame.
+    * @return the score from the ninth frame.
+    */
+   static int calculateFrame( int index, String frame, List<String> frames ) {
       
       int score = 0;
-      
-      if ( ninthFrame.equals( STRIKE ) ) {
-         score = score + 10;
-         if ( tenthFrame.equals( STRIKE ) ) {
+
+      if ( frame.equals( STRIKE ) ) {
+
+         score = 10;
+         int tfIndex = index + 2;
+         String nextFrame = frames.get( index + 1 );
+
+         if ( nextFrame.equals( STRIKE ) ) {
             score = score + 10;
-            String [] extraThrows = frames.get( 10 ).split( "" );
+            String [] extraThrows = frames.get( tfIndex ).split( "" );
             if ( extraThrows[0].equals( STRIKE ) ) {
                score = score + 10;
             } else {
                score = score + Integer.valueOf( extraThrows[0] );
             }
          } else {
-            String [] throwz = tenthFrame.split( "" );
+            String [] throwz = nextFrame.split( "" );
             if ( throwz[1].equals( SPARE ) ) {
                score = score + 10;
             } else {
@@ -146,15 +92,16 @@ public class Game {
             }
          }
       } else {
-         String [] throwz = ninthFrame.split( "" );
+         String [] throwz = frame.split( "" );
          if ( throwz[1].equals( SPARE ) ) {
             
             score = 10;
+            String nextFrame = frames.get( index + 1 );
 
-            if ( tenthFrame.equals( STRIKE ) ) {
+            if ( nextFrame.equals( STRIKE ) ) {
                score = score + 10;
             } else {
-               score = score + Integer.valueOf( tenthFrame.split( "" )[0] );
+               score = score + getFirstThrow( nextFrame );
             }
          } else {
             score = score + Integer.valueOf( throwz[0] ) + Integer.valueOf( throwz[1] );
@@ -164,30 +111,33 @@ public class Game {
       return score;
    }
 
+   private String game;
+
+   private List<String> getFrames() {
+      List<String> frames = Arrays.asList( this.game.split( "-" ) );
+      return frames;
+   }
+
    public Game( String game ) {
       this.game = game;
    }
 
+   /**
+    * @return the score from the bowling game.
+    */
    public int getFinalScore() {
 
       int score = 0;
       boolean spare = false;
       List<String> frames = getFrames();
-      for ( int i=0; i<8; i++ ) {
+      for ( int i=0; i<9; i++ ) {
          String frame = frames.get( i );
-         String framep1 = frames.get( i+1 );
-         String framep2 = frames.get( i+2 );
-
-         int frameTotal = getFrameTotal( frame, framep1, framep2 );
-
-         score = score + frameTotal;
+         score = score + calculateFrame( i, frame, frames );
       }
 
-      String ninthFrame = frames.get( 8 );
       String tenthFrame = frames.get( 9 );
-      int ninthFrameTotal = calculateNinthFrame( ninthFrame, tenthFrame, frames );
       int tenthFrameTotal = calculateTenthFrame( tenthFrame, frames );
-      score = score + ninthFrameTotal + tenthFrameTotal;
+      score = score + tenthFrameTotal;
 
       return score;
    }

@@ -56,27 +56,57 @@ public class GameTest {
    }
 
    @Test
-   public void testCalculateNinthFrame() {
+   public void testCalculateFrame() {
       
       int result = 0;
-      String ninthFrame = "";
+      int index = 0;
+      String frame = "";
       String tenthFrame = "";
       List<String> frames = new ArrayList<String>();      
-      for ( int i=0; i<20; i++ ) {
-         frames.add( i, new String( "" ) );
-      }
+      frames.add( 0, "" );
 
       // Two numbers
-      ninthFrame = "45";
-      result = Game.calculateNinthFrame( ninthFrame, tenthFrame, frames );
+      frame = "45";
+      result = Game.calculateFrame( index, frame, frames );
       assertEquals( 9, result );
 
       // With a spare
-      ninthFrame = "2/";
-      tenthFrame = "63";
-      result = Game.calculateNinthFrame( ninthFrame, tenthFrame, frames );
+      frame = "2/";
+      frames.add( 1, "63" );
+      result = Game.calculateFrame( index, frame, frames );
       assertEquals( 16, result );
 
+      // With a spare and a strike in the tenth frame
+      frame = "2/";
+      frames.add( 1, "X" );
+      result = Game.calculateFrame( index, frame, frames );
+      assertEquals( 20, result );
+
+      // With a strike and numbers in the tenth frame
+      frame = "X";
+      frames.add( 1, "45" );
+      result = Game.calculateFrame( index, frame, frames );
+      assertEquals( 19, result );
+
+      // With a strike and a spares in the tenth frame
+      frame = "X";
+      frames.add( 1, "4/" );
+      result = Game.calculateFrame( index, frame, frames );
+      assertEquals( 20, result );
+
+      // With a strike and a strike in the tenth frame
+      frame = "X";
+      frames.add( 1, "X" );
+      frames.add( 2, "45" );
+      result = Game.calculateFrame( index, frame, frames );
+      assertEquals( 24, result );
+
+      // With a strike and a strike in the tenth frame and the extra throw
+      frame = "X";
+      frames.add( 1, "X" );
+      frames.add( 2, "XX" );
+      result = Game.calculateFrame( index, frame, frames );
+      assertEquals( 30, result );
    }
 }
 
