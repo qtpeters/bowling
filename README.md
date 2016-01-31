@@ -1,11 +1,11 @@
-
+<p align="center">
 <img 
    align="middle" 
    style="display:block; margin-left:auto; margin-right:auto" 
    src="https://github.com/qtpeters/bowling/blob/master/docs/bowling.jpg" 
    alt="bowling" 
 />
-
+</p>
 # This is a score tallier for American 10 pin bowling.
 
 The to level documents and folders are as such:
