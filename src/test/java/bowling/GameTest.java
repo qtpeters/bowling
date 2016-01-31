@@ -128,6 +128,12 @@ public class GameTest {
 
       game = new Game( "5/-5/-5/-5/-5/-5/-5/-5/-5/-5/-5" );
       assertEquals( 150, game.getFinalScore() );
+
+      game = new Game( "53-6/-X-X-63-X-2/-6/-81-X-54" );
+      assertEquals( 164, game.getFinalScore() );
+
+      game = new Game( "6/-53-X-X-62-54-4/-X-7/-X-XX" );
+      assertEquals( 174, game.getFinalScore() );
    }
 }
 
